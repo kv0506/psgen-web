@@ -16,7 +16,10 @@ export class AppComponent implements OnInit {
   private resultPassword: string | undefined;
 
   public formGroup: FormGroup;
-  public displayPassword: string | undefined;
+  public passwordText: string | undefined;
+  public displayPattern: boolean = false;
+  public displayPin: boolean = false;
+  public displayPassword: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private clipboard: Clipboard) {
   }
@@ -24,12 +27,11 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.formGroup = this.formBuilder.group({
       pattern: ['', Validators.required],
-      length: [8, [Validators.required, Validators.min(8), Validators.max(44)]],
+      length: [20, [Validators.required, Validators.min(8), Validators.max(44)]],
       pin: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
       includeSpecialCharacter: [true],
       useCustomSpecialCharacter: [false],
       customSpecialCharacter: [{value: '', disabled: true}, [Validators.min(1), Validators.max(1)]],
-      showPassword: [false]
     });
   }
 
@@ -67,8 +69,9 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public showPasswordChanged(args: MatCheckboxChange) {
-    this.setPassword(args.checked);
+  public showPasswordChanged() {
+    this.displayPassword = !this.displayPassword;
+    this.setPassword(this.displayPassword);
   }
 
   public onSubmit() {
@@ -100,19 +103,18 @@ export class AppComponent implements OnInit {
       includeSpecialCharacter: true,
       useCustomSpecialCharacter: false,
       customSpecialCharacter: '',
-      showPassword: false
     });
 
     this.resultPassword = undefined;
-    this.displayPassword = undefined;
+    this.passwordText = undefined;
   }
 
   private setPassword(displayActualPassword: boolean) {
     if (this.resultPassword) {
       if (displayActualPassword) {
-        this.displayPassword = this.resultPassword;
+        this.passwordText = this.resultPassword;
       } else {
-        this.displayPassword = "*".repeat(this.formGroup.value.length);
+        this.passwordText = "*".repeat(this.formGroup.value.length);
       }
     }
   }

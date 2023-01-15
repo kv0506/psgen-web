@@ -9,12 +9,13 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatInputModule} from '@angular/material/input';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatIconModule} from "@angular/material/icon";
 
 import {AppComponent} from './app.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -25,6 +26,7 @@ import {AppComponent} from './app.component';
     MatDividerModule,
     MatInputModule,
     MatSnackBarModule,
+    MatIconModule,
     ReactiveFormsModule
   ],
   providers: [],
