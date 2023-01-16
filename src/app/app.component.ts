@@ -107,6 +107,8 @@ export class AppComponent implements OnInit {
 
     this.resultPassword = undefined;
     this.passwordText = undefined;
+    this.pattern?.setErrors(null);
+    this.pin?.setErrors(null);
   }
 
   private setPassword(displayActualPassword: boolean) {
