@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, FormGroupDirective, Validators} from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {Clipboard} from '@angular/cdk/clipboard';
@@ -95,7 +95,10 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public clear() {
+  public clear(formDirective: FormGroupDirective) {
+    formDirective.resetForm();
+    this.formGroup.reset();
+
     this.formGroup.setValue({
       pattern: '',
       pin: '',
@@ -107,8 +110,6 @@ export class AppComponent implements OnInit {
 
     this.resultPassword = undefined;
     this.passwordText = undefined;
-    this.pattern?.setErrors(null);
-    this.pin?.setErrors(null);
   }
 
   private setPassword(displayActualPassword: boolean) {
@@ -125,7 +126,7 @@ export class AppComponent implements OnInit {
     let randomPassword = this.createHash(pattern);
     let password = '';
 
-    if (includeSpecialCharacter === false) {
+    if (!includeSpecialCharacter) {
       for (let i = 0; i < length; i++) {
         if (this.characters.indexOf(randomPassword[i]) > -1) {
           password = password.concat(randomPassword[i]);
@@ -145,7 +146,7 @@ export class AppComponent implements OnInit {
         }
       }
 
-      if (hasSpecialCharacter === false) {
+      if (!hasSpecialCharacter) {
         let passwordPart = password.substring(0, length - 1);
         return useCustomSpecialCharacter ? passwordPart.concat(customSpecialCharacter[0]) : passwordPart.concat('#');
       }

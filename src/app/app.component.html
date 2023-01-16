@@ -1,6 +1,7 @@
 <form
   class="card-container mx-auto"
   [formGroup]="formGroup"
+  #formDirective="ngForm"
   (ngSubmit)="onSubmit()"
   novalidate
 >
@@ -138,7 +139,7 @@
             mat-raised-button
             type="button"
             color="basic"
-            (click)="clear()"
+            (click)="clear(formDirective)"
           >
             Clear
           </button>
