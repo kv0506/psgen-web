@@ -99,7 +99,7 @@ export class AppComponent implements OnInit {
     this.formGroup.setValue({
       pattern: '',
       pin: '',
-      length: 8,
+      length: 20,
       includeSpecialCharacter: true,
       useCustomSpecialCharacter: false,
       customSpecialCharacter: '',
