@@ -75,17 +75,17 @@
         </div>
         <div class="row mb-3">
           <div class="col-sm-12">
-            <mat-checkbox formControlName="includeSpecialCharacter" (change)="includeSpecialCharacterChanged($event)">
+            <mat-slide-toggle formControlName="includeSpecialCharacter" (change)="includeSpecialCharacterChanged($event)">
               Include Special Character
-            </mat-checkbox>
+            </mat-slide-toggle>
           </div>
         </div>
         <div class="row mb-3">
           <div class="col-sm-12">
-            <mat-checkbox formControlName="useCustomSpecialCharacter"
+            <mat-slide-toggle formControlName="useCustomSpecialCharacter"
                           (change)="useCustomSpecialCharacterChanged($event)">
               Use Custom Special Character
-            </mat-checkbox>
+            </mat-slide-toggle>
           </div>
         </div>
         <div class="row mb-3">

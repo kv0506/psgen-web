@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, FormGroupDirective, Validators} from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {MatCheckboxChange} from "@angular/material/checkbox";
 import {Clipboard} from '@angular/cdk/clipboard';
-
+import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import * as CryptoJS from 'crypto-js';
 
 @Component({
@@ -51,20 +50,21 @@ export class AppComponent implements OnInit {
     return this.formGroup.get('customSpecialCharacter');
   }
 
-  public includeSpecialCharacterChanged(args: MatCheckboxChange) {
+  public includeSpecialCharacterChanged(args: MatSlideToggleChange) {
     if (args.checked) {
       this.formGroup.get('useCustomSpecialCharacter')?.enable();
     } else {
-      this.formGroup.patchValue({useCustomSpecialCharacter: false});
+      this.formGroup.patchValue({useCustomSpecialCharacter: false, customSpecialCharacter: ''});
       this.formGroup.get('useCustomSpecialCharacter')?.disable();
       this.formGroup.get('customSpecialCharacter')?.disable();
     }
   }
 
-  public useCustomSpecialCharacterChanged(args: MatCheckboxChange) {
+  public useCustomSpecialCharacterChanged(args: MatSlideToggleChange) {
     if (args.checked) {
       this.formGroup.get('customSpecialCharacter')?.enable();
     } else {
+      this.formGroup.patchValue({customSpecialCharacter: ''});
       this.formGroup.get('customSpecialCharacter')?.disable();
     }
   }
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
     let customSpecialCharacter = this.formGroup.value.customSpecialCharacter;
 
     this.resultPassword = this.createPassword(actualPattern, passwordLength, includeSpecialCharacter, useCustomSpecialCharacter, customSpecialCharacter);
-    this.setPassword(this.formGroup.value.showPassword);
+    this.setPassword(this.displayPassword);
   }
 
   public copyPassword() {
