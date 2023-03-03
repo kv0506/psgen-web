@@ -11,27 +11,15 @@ import * as CryptoJS from 'crypto-js';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent implements OnInit {
-  private characters: string = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  private resultPassword: string | undefined;
-
   public formGroup: FormGroup;
   public passwordText: string | undefined;
   public displayPattern: boolean = false;
   public displayPin: boolean = false;
   public displayPassword: boolean = false;
+  private characters: string = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  private resultPassword: string | undefined;
 
   constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private clipboard: Clipboard) {
-  }
-
-  ngOnInit(): void {
-    this.formGroup = this.formBuilder.group({
-      pattern: ['', Validators.required],
-      length: [20, [Validators.required, Validators.min(8), Validators.max(44)]],
-      pin: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
-      includeSpecialCharacter: [true],
-      useCustomSpecialCharacter: [false],
-      customSpecialCharacter: [{value: '', disabled: true}, [Validators.min(1), Validators.max(1)]],
-    });
   }
 
   public get pattern() {
@@ -50,23 +38,23 @@ export class AppComponent implements OnInit {
     return this.formGroup.get('customSpecialCharacter');
   }
 
+  ngOnInit(): void {
+    this.formGroup = this.formBuilder.group({
+      pattern: ['', Validators.required],
+      length: [20, [Validators.required, Validators.min(8), Validators.max(44)]],
+      pin: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
+      includeSpecialCharacter: [true],
+      useCustomSpecialCharacter: [false],
+      customSpecialCharacter: [{value: '', disabled: true}, [Validators.min(1), Validators.max(1)]],
+    });
+  }
+
   public includeSpecialCharacterChanged(args: MatSlideToggleChange) {
-    if (args.checked) {
-      this.formGroup.get('useCustomSpecialCharacter')?.enable();
-    } else {
-      this.formGroup.patchValue({useCustomSpecialCharacter: false, customSpecialCharacter: ''});
-      this.formGroup.get('useCustomSpecialCharacter')?.disable();
-      this.formGroup.get('customSpecialCharacter')?.disable();
-    }
+    this.handleIncludeSpecialCharacterChanged(args.checked);
   }
 
   public useCustomSpecialCharacterChanged(args: MatSlideToggleChange) {
-    if (args.checked) {
-      this.formGroup.get('customSpecialCharacter')?.enable();
-    } else {
-      this.formGroup.patchValue({customSpecialCharacter: ''});
-      this.formGroup.get('customSpecialCharacter')?.disable();
-    }
+    this.handleUseCustomSpecialCharacterChanged(args.checked);
   }
 
   public showPasswordChanged() {
@@ -110,6 +98,28 @@ export class AppComponent implements OnInit {
 
     this.resultPassword = undefined;
     this.passwordText = undefined;
+
+    this.handleIncludeSpecialCharacterChanged(true);
+    this.handleUseCustomSpecialCharacterChanged(false);
+  }
+
+  private handleIncludeSpecialCharacterChanged(value: boolean) {
+    if (value) {
+      this.formGroup.get('useCustomSpecialCharacter')?.enable();
+    } else {
+      this.formGroup.patchValue({useCustomSpecialCharacter: false, customSpecialCharacter: ''});
+      this.formGroup.get('useCustomSpecialCharacter')?.disable();
+      this.formGroup.get('customSpecialCharacter')?.disable();
+    }
+  }
+
+  private handleUseCustomSpecialCharacterChanged(value: boolean) {
+    if (value) {
+      this.formGroup.get('customSpecialCharacter')?.enable();
+    } else {
+      this.formGroup.patchValue({customSpecialCharacter: ''});
+      this.formGroup.get('customSpecialCharacter')?.disable();
+    }
   }
 
   private setPassword(displayActualPassword: boolean) {
