@@ -12,10 +12,12 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from '@angular/materia
 import {MatIconModule} from "@angular/material/icon";
 
 import {AppComponent} from './app.component';
+import {GeneratePasswordComponent} from './generate-password/generate-password.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    GeneratePasswordComponent,
   ],
   imports: [
     BrowserAnimationsModule,
