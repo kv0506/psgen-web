@@ -1,1 +1,11 @@
-<app-generate-password></app-generate-password>
+<app-header></app-header>
+<mat-progress-bar
+  *ngIf="'default' | swIsLoading | async"
+  color="warn"
+  mode="indeterminate"
+  style="z-index: 100"
+>
+</mat-progress-bar>
+<div class="container-fluid p-3" role="main">
+  <router-outlet></router-outlet>
+</div>
