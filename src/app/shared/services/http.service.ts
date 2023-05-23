@@ -13,6 +13,7 @@ export class HttpService {
   }
 
   public async get<T>(path: string, ctor: Type<T>, authToken: string | undefined): Promise<T> {
+    let url = environment.apiConfig.url + path;
     let headers = new HttpHeaders({'Content-Type': 'application/json'});
 
     if (authToken) {
@@ -20,7 +21,7 @@ export class HttpService {
     }
 
     let httpResponse = await lastValueFrom(
-      this.http.get(environment.apiConfig.url, {
+      this.http.get(url, {
         headers: headers,
         observe: 'response',
         responseType: 'json',
