@@ -17,7 +17,7 @@ export class HttpService {
     let headers = new HttpHeaders({'Content-Type': 'application/json'});
 
     if (authToken) {
-      headers.set('AuthToken', authToken);
+      headers = headers.set('AuthToken', authToken);
     }
 
     let httpResponse = await lastValueFrom(
@@ -36,7 +36,7 @@ export class HttpService {
     let headers = new HttpHeaders({'Content-Type': 'application/json'});
 
     if (authToken) {
-      headers.set('AuthToken', authToken);
+      headers = headers.set('AuthToken', authToken);
     }
 
     let httpResponse = await lastValueFrom(
@@ -55,7 +55,7 @@ export class HttpService {
     let headers = new HttpHeaders({'Content-Type': 'application/json'});
 
     if (authToken) {
-      headers.set('AuthToken', authToken);
+      headers = headers.set('AuthToken', authToken);
     }
 
     let httpResponse = await lastValueFrom(
@@ -74,7 +74,7 @@ export class HttpService {
     let headers = new HttpHeaders({'Content-Type': 'application/json'});
 
     if (authToken) {
-      headers.set('AuthToken', authToken);
+      headers = headers.set('AuthToken', authToken);
     }
 
     let httpResponse = await lastValueFrom(
