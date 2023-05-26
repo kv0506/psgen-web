@@ -1,0 +1,14 @@
+<div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
+  <div class="col" *ngFor="let account of accounts">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{account.name}}</h5>
+        <div class="d-flex">
+          <div class="flex-grow-1">{{account.category}}</div>
+          <div class="btn btn-outline-secondary btn-sm me-2">Edit</div>
+          <div class="btn btn-outline-primary btn-sm">Get Password</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
