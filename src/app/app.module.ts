@@ -24,7 +24,6 @@ import {HeaderComponent} from './header/header.component';
 import {LoginComponent} from './login/login.component';
 import {AccountsComponent} from './accounts/accounts.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,

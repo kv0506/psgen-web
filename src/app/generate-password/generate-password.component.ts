@@ -3,7 +3,14 @@ import {FormBuilder, FormGroup, FormGroupDirective, Validators} from "@angular/f
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Clipboard} from '@angular/cdk/clipboard';
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
-import * as CryptoJS from 'crypto-js';
+import {AuthService} from "../shared/services/auth.service";
+import {AccountService} from "../shared/services/account.service";
+import {CreateAccount, UpdateAccount} from "../shared/models/request/account";
+import {IsLoadingService} from "@service-work/is-loading";
+import {AlertService} from "../shared/services/alert.service";
+import {Account} from "../shared/models/dto/account";
+import {PasswordHashService} from "../shared/services/password-hash.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-generate-password',
@@ -16,10 +23,12 @@ export class GeneratePasswordComponent implements OnInit {
   public displayPattern: boolean = false;
   public displayPin: boolean = false;
   public displayPassword: boolean = false;
-  private characters: string = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  public isSaveEnabled: boolean;
+  public account: Account;
   private resultPassword: string | undefined;
 
-  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private clipboard: Clipboard) {
+  constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private snackBar: MatSnackBar, private clipboard: Clipboard, private loadingService: IsLoadingService,
+              private passwordHashService: PasswordHashService, private authService: AuthService, private accountService: AccountService, private alertService: AlertService) {
   }
 
   public get pattern() {
@@ -45,8 +54,22 @@ export class GeneratePasswordComponent implements OnInit {
       pin: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(8)]],
       includeSpecialCharacter: [true],
       useCustomSpecialCharacter: [false],
-      customSpecialCharacter: [{value: '', disabled: true}, [Validators.min(1), Validators.max(1)]],
+      customSpecialCharacter: [{
+        value: '',
+        disabled: true
+      }, [Validators.maxLength(1), Validators.pattern('^[!#$()*+-:;<=>?@_{|}~\\[\\]]$')]],
+      accountName: [''],
+      accountCategory: ['']
     });
+
+    this.route.queryParams
+      .subscribe(params => {
+          // @ts-ignore
+          this.getAccount(params.accountId);
+        }
+      );
+
+    this.isSaveEnabled = this.authService.isLoggedIn();
   }
 
   public includeSpecialCharacterChanged(args: MatSlideToggleChange) {
@@ -72,7 +95,7 @@ export class GeneratePasswordComponent implements OnInit {
     let useCustomSpecialCharacter = this.formGroup.value.useCustomSpecialCharacter;
     let customSpecialCharacter = this.formGroup.value.customSpecialCharacter;
 
-    this.resultPassword = this.createPassword(actualPattern, passwordLength, includeSpecialCharacter, useCustomSpecialCharacter, customSpecialCharacter);
+    this.resultPassword = this.passwordHashService.createPassword(actualPattern, passwordLength, includeSpecialCharacter, useCustomSpecialCharacter, customSpecialCharacter);
     this.setPassword(this.displayPassword);
   }
 
@@ -94,6 +117,8 @@ export class GeneratePasswordComponent implements OnInit {
       includeSpecialCharacter: true,
       useCustomSpecialCharacter: false,
       customSpecialCharacter: '',
+      accountName: '',
+      accountCategory: ''
     });
 
     this.resultPassword = undefined;
@@ -103,6 +128,20 @@ export class GeneratePasswordComponent implements OnInit {
     this.handleUseCustomSpecialCharacterChanged(false);
   }
 
+  public canSave(): boolean {
+    return this.formGroup.valid && this.formGroup.value.accountName;
+  }
+
+  public saveAccount() {
+    if (this.canSave()) {
+      if (this.account) {
+        this.updateAccount();
+      } else {
+        this.createAccount();
+      }
+    }
+  }
+
   private handleIncludeSpecialCharacterChanged(value: boolean) {
     if (value) {
       this.formGroup.get('useCustomSpecialCharacter')?.enable();
@@ -110,16 +149,21 @@ export class GeneratePasswordComponent implements OnInit {
       this.formGroup.patchValue({useCustomSpecialCharacter: false, customSpecialCharacter: ''});
       this.formGroup.get('useCustomSpecialCharacter')?.disable();
       this.formGroup.get('customSpecialCharacter')?.disable();
+      this.formGroup.get('customSpecialCharacter')?.removeValidators(Validators.required);
+      this.formGroup.get('customSpecialCharacter')?.updateValueAndValidity();
     }
   }
 
   private handleUseCustomSpecialCharacterChanged(value: boolean) {
     if (value) {
       this.formGroup.get('customSpecialCharacter')?.enable();
+      this.formGroup.get('customSpecialCharacter')?.addValidators(Validators.required);
     } else {
       this.formGroup.patchValue({customSpecialCharacter: ''});
+      this.formGroup.get('customSpecialCharacter')?.removeValidators(Validators.required);
       this.formGroup.get('customSpecialCharacter')?.disable();
     }
+    this.formGroup.get('customSpecialCharacter')?.updateValueAndValidity();
   }
 
   private setPassword(displayActualPassword: boolean) {
@@ -132,40 +176,62 @@ export class GeneratePasswordComponent implements OnInit {
     }
   }
 
-  private createPassword(pattern: string, length: number, includeSpecialCharacter: boolean, useCustomSpecialCharacter: boolean, customSpecialCharacter: string): string {
-    let randomPassword = this.createHash(pattern);
-    let password = '';
+  private async getAccount(accountId: string) {
+    if (accountId) {
+      let resp = await this.loadingService.add(this.accountService.get(accountId));
+      if (resp.isSuccess) {
+        this.account = resp.result;
 
-    if (!includeSpecialCharacter) {
-      for (let i = 0; i < length; i++) {
-        if (this.characters.indexOf(randomPassword[i]) > -1) {
-          password = password.concat(randomPassword[i]);
-        } else {
-          password = password.concat(this.characters[i]);
-        }
-      }
-      return password;
-    } else {
-      let hasSpecialCharacter = false;
-      for (let i = 0; i < length; i++) {
-        if (this.characters.indexOf(randomPassword[i]) > -1) {
-          password = password.concat(randomPassword[i]);
-        } else {
-          hasSpecialCharacter = true;
-          password = useCustomSpecialCharacter ? password.concat(customSpecialCharacter[0]) : password.concat(randomPassword[i]);
-        }
-      }
+        this.formGroup.setValue({
+          pattern: this.account.pattern,
+          pin: '',
+          length: this.account.length,
+          includeSpecialCharacter: this.account.includeSpecialCharacter,
+          useCustomSpecialCharacter: this.account.useCustomSpecialCharacter,
+          customSpecialCharacter: this.account.customSpecialCharacter,
+          accountName: this.account.name,
+          accountCategory: this.account.category
+        });
 
-      if (!hasSpecialCharacter) {
-        let passwordPart = password.substring(0, length - 1);
-        return useCustomSpecialCharacter ? passwordPart.concat(customSpecialCharacter[0]) : passwordPart.concat('#');
+        // uncomment if required
+        // this.handleIncludeSpecialCharacterChanged(this.account.includeSpecialCharacter);
+        // this.handleUseCustomSpecialCharacterChanged(this.account.useCustomSpecialCharacter);
       }
-
-      return password;
     }
   }
 
-  private createHash(content: string): string {
-    return CryptoJS.SHA256(content).toString(CryptoJS.enc.Base64);
+  private async createAccount() {
+    let req = new CreateAccount();
+    req.name = this.formGroup.value.accountName;
+    req.category = this.formGroup.value.accountCategory;
+    req.pattern = this.formGroup.value.pattern;
+    req.length = this.formGroup.value.length;
+    req.includeSpecialCharacter = this.formGroup.value.includeSpecialCharacter;
+    req.useCustomSpecialCharacter = this.formGroup.value.useCustomSpecialCharacter;
+    req.customSpecialCharacter = this.formGroup.value.customSpecialCharacter;
+
+    let resp = await this.loadingService.add(this.accountService.create(req));
+    if (resp.isSuccess) {
+      this.alertService.showError(`Account ${req.name} is saved successfully`);
+    }
+  }
+
+  private async updateAccount() {
+    if (this.account) {
+      let req = new UpdateAccount();
+      req.id = this.account.id;
+      req.name = this.formGroup.value.accountName;
+      req.category = this.formGroup.value.accountCategory;
+      req.pattern = this.formGroup.value.pattern;
+      req.length = this.formGroup.value.length;
+      req.includeSpecialCharacter = this.formGroup.value.includeSpecialCharacter;
+      req.useCustomSpecialCharacter = this.formGroup.value.useCustomSpecialCharacter;
+      req.customSpecialCharacter = this.formGroup.value.customSpecialCharacter;
+
+      let resp = await this.loadingService.add(this.accountService.update(req));
+      if (resp.isSuccess) {
+        this.alertService.showError(`Account ${req.name} is updated successfully`);
+      }
+    }
   }
 }
