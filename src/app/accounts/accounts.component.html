@@ -2,11 +2,16 @@
   <div class="col" *ngFor="let account of accounts">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">{{account.name}}</h5>
         <div class="d-flex">
-          <div class="flex-grow-1">{{account.category}}</div>
-          <div class="btn btn-outline-secondary btn-sm me-2">Edit</div>
-          <div class="btn btn-outline-primary btn-sm">Get Password</div>
+          <div class="flex-grow-1"><h5 class="card-title">{{account.name}}</h5></div>
+          <div class="text-secondary">{{account.category}}</div>
+        </div>
+        <div *ngIf="account.username" class="text-body">{{account.username}}</div>
+        <div class="d-flex">
+          <div class="flex-grow-1"></div>
+          <div class="btn btn-outline-danger btn-sm me-2" (click)="deleteAccount(account.id)">Delete</div>
+          <div class="btn btn-outline-secondary btn-sm me-2" (click)="editAccount(account.id)">Edit</div>
+          <div class="btn btn-outline-primary btn-sm" (click)="generatePassword(account.id)">Get Password</div>
         </div>
       </div>
     </div>

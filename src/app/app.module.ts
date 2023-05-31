@@ -23,6 +23,8 @@ import {GeneratePasswordComponent} from './generate-password/generate-password.c
 import {HeaderComponent} from './header/header.component';
 import {LoginComponent} from './login/login.component';
 import {AccountsComponent} from './accounts/accounts.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import { ManageAccountComponent } from './manage-account/manage-account.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import {AccountsComponent} from './accounts/accounts.component';
     HeaderComponent,
     LoginComponent,
     AccountsComponent,
+    ManageAccountComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -44,7 +47,7 @@ import {AccountsComponent} from './accounts/accounts.component';
     MatIconModule,
     MatSlideToggleModule,
     MatProgressBarModule,
-    MatListModule,
+    MatDialogModule,
     ReactiveFormsModule,
     HttpClientModule,
     IsLoadingModule,
