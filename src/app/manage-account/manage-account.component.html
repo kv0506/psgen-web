@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>Manage Account</h2>
+<mat-dialog-content>
+  <form
+    [formGroup]="formGroup"
+    class="mx-auto"
+    novalidate
+  >
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Account Name</mat-label>
+          <input
+            matInput
+            formControlName="accountName"
+            type="text"
+            required/>
+          <mat-hint>Account Name is required</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Category</mat-label>
+          <input
+            matInput
+            formControlName="accountCategory"
+            type="text"/>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Username</mat-label>
+          <input
+            matInput
+            formControlName="username"
+            type="text"/>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-dialog-close mat-raised-button>Cancel</button>
+  <button
+    (click)="onSubmit()"
+    cdkFocusInitial
+    color="primary"
+    mat-raised-button
+    type="button"
+    [disabled]="submitInProgress"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

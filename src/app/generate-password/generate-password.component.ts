@@ -5,12 +5,12 @@ import {Clipboard} from '@angular/cdk/clipboard';
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {AuthService} from "../shared/services/auth.service";
 import {AccountService} from "../shared/services/account.service";
-import {CreateAccount, UpdateAccount} from "../shared/models/request/account";
 import {IsLoadingService} from "@service-work/is-loading";
-import {AlertService} from "../shared/services/alert.service";
 import {Account} from "../shared/models/dto/account";
 import {PasswordHashService} from "../shared/services/password-hash.service";
 import {ActivatedRoute} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {ManageAccountComponent} from "../manage-account/manage-account.component";
 
 @Component({
   selector: 'app-generate-password',
@@ -27,8 +27,16 @@ export class GeneratePasswordComponent implements OnInit {
   public account: Account;
   private resultPassword: string | undefined;
 
-  constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private snackBar: MatSnackBar, private clipboard: Clipboard, private loadingService: IsLoadingService,
-              private passwordHashService: PasswordHashService, private authService: AuthService, private accountService: AccountService, private alertService: AlertService) {
+  constructor(
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar,
+    private clipboard: Clipboard,
+    private loadingService: IsLoadingService,
+    private dialog: MatDialog,
+    private passwordHashService: PasswordHashService,
+    private authService: AuthService,
+    private accountService: AccountService) {
   }
 
   public get pattern() {
@@ -57,9 +65,7 @@ export class GeneratePasswordComponent implements OnInit {
       customSpecialCharacter: [{
         value: '',
         disabled: true
-      }, [Validators.maxLength(1), Validators.pattern('^[!#$()*+-:;<=>?@_{|}~\\[\\]]$')]],
-      accountName: [''],
-      accountCategory: ['']
+      }, [Validators.maxLength(1), Validators.pattern('^[!#$()*+-:;<=>?@_{|}~\\[\\]]$')]]
     });
 
     this.route.queryParams
@@ -116,9 +122,7 @@ export class GeneratePasswordComponent implements OnInit {
       length: 20,
       includeSpecialCharacter: true,
       useCustomSpecialCharacter: false,
-      customSpecialCharacter: '',
-      accountName: '',
-      accountCategory: ''
+      customSpecialCharacter: ''
     });
 
     this.resultPassword = undefined;
@@ -128,17 +132,28 @@ export class GeneratePasswordComponent implements OnInit {
     this.handleUseCustomSpecialCharacterChanged(false);
   }
 
-  public canSave(): boolean {
-    return this.formGroup.valid && this.formGroup.value.accountName;
-  }
-
   public saveAccount() {
-    if (this.canSave()) {
+    if (this.resultPassword) {
+      let account = new Account();
+      account.pattern = this.formGroup.value.pattern;
+      account.length = this.formGroup.value.length;
+      account.includeSpecialCharacter = this.formGroup.value.includeSpecialCharacter;
+      account.useCustomSpecialCharacter = this.formGroup.value.useCustomSpecialCharacter;
+      account.customSpecialCharacter = this.formGroup.value.customSpecialCharacter ?? '';
       if (this.account) {
-        this.updateAccount();
-      } else {
-        this.createAccount();
+        account.id = this.account.id;
+        account.name = this.account.name;
+        account.category = this.account.category;
+        account.username = this.account.username;
       }
+
+      const dialogRef = this.dialog.open(ManageAccountComponent, {
+        data: {account: account},
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+        }
+      });
     }
   }
 
@@ -188,49 +203,12 @@ export class GeneratePasswordComponent implements OnInit {
           length: this.account.length,
           includeSpecialCharacter: this.account.includeSpecialCharacter,
           useCustomSpecialCharacter: this.account.useCustomSpecialCharacter,
-          customSpecialCharacter: this.account.customSpecialCharacter,
-          accountName: this.account.name,
-          accountCategory: this.account.category
+          customSpecialCharacter: this.account.customSpecialCharacter ?? ''
         });
 
         // uncomment if required
         // this.handleIncludeSpecialCharacterChanged(this.account.includeSpecialCharacter);
         // this.handleUseCustomSpecialCharacterChanged(this.account.useCustomSpecialCharacter);
-      }
-    }
-  }
-
-  private async createAccount() {
-    let req = new CreateAccount();
-    req.name = this.formGroup.value.accountName;
-    req.category = this.formGroup.value.accountCategory;
-    req.pattern = this.formGroup.value.pattern;
-    req.length = this.formGroup.value.length;
-    req.includeSpecialCharacter = this.formGroup.value.includeSpecialCharacter;
-    req.useCustomSpecialCharacter = this.formGroup.value.useCustomSpecialCharacter;
-    req.customSpecialCharacter = this.formGroup.value.customSpecialCharacter;
-
-    let resp = await this.loadingService.add(this.accountService.create(req));
-    if (resp.isSuccess) {
-      this.alertService.showError(`Account ${req.name} is saved successfully`);
-    }
-  }
-
-  private async updateAccount() {
-    if (this.account) {
-      let req = new UpdateAccount();
-      req.id = this.account.id;
-      req.name = this.formGroup.value.accountName;
-      req.category = this.formGroup.value.accountCategory;
-      req.pattern = this.formGroup.value.pattern;
-      req.length = this.formGroup.value.length;
-      req.includeSpecialCharacter = this.formGroup.value.includeSpecialCharacter;
-      req.useCustomSpecialCharacter = this.formGroup.value.useCustomSpecialCharacter;
-      req.customSpecialCharacter = this.formGroup.value.customSpecialCharacter;
-
-      let resp = await this.loadingService.add(this.accountService.update(req));
-      if (resp.isSuccess) {
-        this.alertService.showError(`Account ${req.name} is updated successfully`);
       }
     }
   }

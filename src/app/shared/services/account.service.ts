@@ -28,6 +28,6 @@ export class AccountService {
   }
 
   public async delete(body: DeleteAccount): Promise<DeletedResponse> {
-    return await this.http.put<DeletedResponse>('accounts', body, DeletedResponse, this.authService.getAuthToken());
+    return await this.http.delete<DeletedResponse>('accounts', body, DeletedResponse, this.authService.getAuthToken());
   }
 }

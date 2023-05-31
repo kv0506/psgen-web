@@ -6,6 +6,7 @@ import {AccountsComponent} from "./accounts/accounts.component";
 
 const routes: Routes = [
   {path: '', component: GeneratePasswordComponent},
+  {path: 'generate-password', component: GeneratePasswordComponent},
   {path: 'login', component: LoginComponent},
   {path: 'accounts', component: AccountsComponent},
 ];
