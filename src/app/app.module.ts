@@ -15,7 +15,6 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatIconModule} from "@angular/material/icon";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {MatListModule} from "@angular/material/list";
 
 import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from './app.component';
@@ -24,7 +23,7 @@ import {HeaderComponent} from './header/header.component';
 import {LoginComponent} from './login/login.component';
 import {AccountsComponent} from './accounts/accounts.component';
 import {MatDialogModule} from "@angular/material/dialog";
-import { ManageAccountComponent } from './manage-account/manage-account.component';
+import {ManageAccountComponent} from './manage-account/manage-account.component';
 
 @NgModule({
   declarations: [

@@ -206,9 +206,8 @@ export class GeneratePasswordComponent implements OnInit {
           customSpecialCharacter: this.account.customSpecialCharacter ?? ''
         });
 
-        // uncomment if required
-        // this.handleIncludeSpecialCharacterChanged(this.account.includeSpecialCharacter);
-        // this.handleUseCustomSpecialCharacterChanged(this.account.useCustomSpecialCharacter);
+        this.handleIncludeSpecialCharacterChanged(this.account.includeSpecialCharacter);
+        this.handleUseCustomSpecialCharacterChanged(this.account.useCustomSpecialCharacter);
       }
     }
   }

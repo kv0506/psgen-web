@@ -4,6 +4,7 @@ import {IsLoadingService} from "@service-work/is-loading";
 import {AccountService} from "../shared/services/account.service";
 import {Router} from "@angular/router";
 import {DeleteAccount} from "../shared/models/request/account";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-accounts',
@@ -12,12 +13,23 @@ import {DeleteAccount} from "../shared/models/request/account";
 })
 export class AccountsComponent implements OnInit {
   accounts: Array<Account>;
+  search: FormControl;
 
-  constructor(private router: Router, private loadingService: IsLoadingService, private accountService: AccountService) {
+  private allAccounts: Array<Account>;
+
+  constructor(
+    private router: Router,
+    private loadingService: IsLoadingService,
+    private accountService: AccountService) {
   }
 
   ngOnInit(): void {
+    this.search = new FormControl<any>('');
     this.getAccounts();
+  }
+
+  public searchQueryChanged() {
+    this.accounts = this.allAccounts.filter(x => x.name.toLowerCase().includes(this.search.value.toLowerCase()));
   }
 
   public editAccount(accountId: string) {
@@ -40,6 +52,7 @@ export class AccountsComponent implements OnInit {
   private async getAccounts() {
     let resp = await this.loadingService.add(this.accountService.getAll());
     if (resp.isSuccess) {
+      this.allAccounts = resp.result;
       this.accounts = resp.result;
     }
   }
