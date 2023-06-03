@@ -9,5 +9,5 @@ export class Account {
   @autoserialize length: number;
   @autoserialize includeSpecialCharacter: boolean;
   @autoserialize useCustomSpecialCharacter: boolean;
-  @autoserialize customSpecialCharacter: boolean;
+  @autoserialize customSpecialCharacter: string;
 }
