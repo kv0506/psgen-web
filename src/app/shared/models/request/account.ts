@@ -6,7 +6,7 @@ export class CreateAccount {
   length: number;
   includeSpecialCharacter: boolean;
   useCustomSpecialCharacter: boolean;
-  customSpecialCharacter: boolean;
+  customSpecialCharacter: string;
 }
 
 export class UpdateAccount {
@@ -18,7 +18,7 @@ export class UpdateAccount {
   length: number;
   includeSpecialCharacter: boolean;
   useCustomSpecialCharacter: boolean;
-  customSpecialCharacter: boolean;
+  customSpecialCharacter: string;
 }
 
 export class DeleteAccount {

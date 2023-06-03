@@ -5,6 +5,8 @@ import {AccountService} from "../shared/services/account.service";
 import {Router} from "@angular/router";
 import {DeleteAccount} from "../shared/models/request/account";
 import {FormControl} from "@angular/forms";
+import {MatDialog} from "@angular/material/dialog";
+import {AccountPasswordComponent} from "../account-password/account-password.component";
 
 @Component({
   selector: 'app-accounts',
@@ -19,6 +21,7 @@ export class AccountsComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private dialog: MatDialog,
     private loadingService: IsLoadingService,
     private accountService: AccountService) {
   }
@@ -36,8 +39,15 @@ export class AccountsComponent implements OnInit {
     this.router.navigateByUrl(`generate-password?accountId=${accountId}`);
   }
 
-  public generatePassword(accountId: string) {
-    this.router.navigateByUrl(`generate-password?accountId=${accountId}`);
+  public generatePassword(account: Account) {
+    const dialogRef = this.dialog.open(AccountPasswordComponent, {
+      data: {account: account},
+      minWidth: '350px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+      }
+    });
   }
 
   public async deleteAccount(accountId: string) {

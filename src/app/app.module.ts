@@ -24,6 +24,7 @@ import {LoginComponent} from './login/login.component';
 import {AccountsComponent} from './accounts/accounts.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {ManageAccountComponent} from './manage-account/manage-account.component';
+import {AccountPasswordComponent} from './account-password/account-password.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {ManageAccountComponent} from './manage-account/manage-account.component'
     LoginComponent,
     AccountsComponent,
     ManageAccountComponent,
+    AccountPasswordComponent,
   ],
   imports: [
     BrowserAnimationsModule,
