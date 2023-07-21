@@ -30,7 +30,8 @@ export class ManageAccountComponent implements OnInit {
     this.formGroup = this.formBuilder.group({
       accountName: [this.data.account.name ?? '', Validators.required],
       accountCategory: [this.data.account.category ?? ''],
-      username: [this.data.account.username ?? '']
+      username: [this.data.account.username ?? ''],
+      notes: [this.data.account.notes ?? '']
     });
   }
 
@@ -52,6 +53,7 @@ export class ManageAccountComponent implements OnInit {
     req.includeSpecialCharacter = this.data.account.includeSpecialCharacter;
     req.useCustomSpecialCharacter = this.data.account.useCustomSpecialCharacter;
     req.customSpecialCharacter = this.data.account.customSpecialCharacter;
+    req.notes = this.formGroup.value.notes;
 
     let resp = await this.loadingService.add(this.accountService.create(req));
     if (resp.isSuccess) {
@@ -72,6 +74,7 @@ export class ManageAccountComponent implements OnInit {
       req.includeSpecialCharacter = this.data.account.includeSpecialCharacter;
       req.useCustomSpecialCharacter = this.data.account.useCustomSpecialCharacter;
       req.customSpecialCharacter = this.data.account.customSpecialCharacter;
+      req.notes = this.formGroup.value.notes;
 
       let resp = await this.loadingService.add(this.accountService.update(req));
       if (resp.isSuccess) {

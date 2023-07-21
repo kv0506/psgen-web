@@ -25,7 +25,7 @@ export class GeneratePasswordComponent implements OnInit {
   public displayPassword: boolean = false;
   public isSaveEnabled: boolean;
   public account: Account;
-  private resultPassword: string | undefined;
+  public resultPassword: string | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -145,6 +145,7 @@ export class GeneratePasswordComponent implements OnInit {
         account.name = this.account.name;
         account.category = this.account.category;
         account.username = this.account.username;
+        account.notes = this.account.notes;
       }
 
       const dialogRef = this.dialog.open(ManageAccountComponent, {
