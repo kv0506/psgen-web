@@ -10,4 +10,5 @@ export class Account {
   @autoserialize includeSpecialCharacter: boolean;
   @autoserialize useCustomSpecialCharacter: boolean;
   @autoserialize customSpecialCharacter: string;
+  @autoserialize notes: string;
 }

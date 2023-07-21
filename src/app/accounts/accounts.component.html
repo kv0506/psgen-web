@@ -13,6 +13,7 @@
           <div class="text-secondary ms-3">{{account.category}}</div>
         </div>
         <div *ngIf="account.username" class="text-body mb-2">{{account.username}}</div>
+        <div *ngIf="account.notes" class="text-body mb-2">{{account.notes}}</div>
         <div class="d-flex">
           <div class="flex-grow-1"></div>
           <button mat-icon-button color="warn" type="button" (click)="deleteAccount(account.id)">
