@@ -45,7 +45,9 @@ export class LoginComponent {
 
     let resp = await this.loadingService.add(this.authService.login(req));
     if (resp.isSuccess) {
-      await this.router.navigateByUrl('accounts');
+      await this.router.navigate(['/accounts']).then(value => {
+        window.location.reload();
+      });
     } else {
       //show error
     }

@@ -1,12 +1,12 @@
 <div class="sticky-top mb-3">
   <div class="d-flex">
     <div class="flex-grow-1"></div>
-    <div><input class="form-control" type="search" placeholder="Search" aria-label="Search" [formControl]="search" (keyup)="searchQueryChanged()" (search)="searchQueryChanged()"></div>
+    <div><input class="form-control search-box" type="search" placeholder="Search" aria-label="Search" [formControl]="search" (keyup)="searchQueryChanged()" (search)="searchQueryChanged()"></div>
   </div>
 </div>
 <div class="row row-cols-1 row-cols-sm-auto g-4">
   <div class="col" *ngFor="let account of accounts">
-    <div class="card">
+    <div class="card card-bg">
       <div class="card-body">
         <div class="d-flex">
           <div class="flex-grow-1"><h5 class="card-title">{{account.name}}</h5></div>
