@@ -51,4 +51,9 @@ export class AuthService {
 
     return response;
   }
+
+  public logout() {
+    this.currentSession = undefined;
+    this.localStorage.clear('CurrentSession');
+  }
 }
