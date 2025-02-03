@@ -3,10 +3,11 @@ import {Account} from "../shared/models/dto/account";
 import {IsLoadingService} from "@service-work/is-loading";
 import {AccountService} from "../shared/services/account.service";
 import {Router} from "@angular/router";
-import {DeleteAccount} from "../shared/models/request/account";
+import {DeleteAccount, UpdateAccount} from "../shared/models/request/account";
 import {FormControl} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {AccountPasswordComponent} from "../account-password/account-password.component";
+import {AlertService} from "../shared/services/alert.service";
 
 @Component({
   selector: 'app-accounts',
@@ -15,6 +16,7 @@ import {AccountPasswordComponent} from "../account-password/account-password.com
 })
 export class AccountsComponent implements OnInit {
   accounts: Array<Account>;
+  favorites: Array<Account>;
   search: FormControl;
 
   private allAccounts: Array<Account>;
@@ -23,7 +25,8 @@ export class AccountsComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private loadingService: IsLoadingService,
-    private accountService: AccountService) {
+    private accountService: AccountService,
+    private alertService: AlertService,) {
   }
 
   ngOnInit(): void {
@@ -37,6 +40,16 @@ export class AccountsComponent implements OnInit {
 
   public editAccount(accountId: string) {
     this.router.navigateByUrl(`generate-password?accountId=${accountId}`);
+  }
+
+  public favoriteAccount(accountId: string) {
+    let account = this.allAccounts.find(x => x.id == accountId);
+    if (account) {
+      account.isFavorite = !account.isFavorite;
+      this.updateAccount(account).then(r => {
+        this.getAccounts();
+      });
+    }
   }
 
   public generatePassword(account: Account) {
@@ -64,6 +77,29 @@ export class AccountsComponent implements OnInit {
     if (resp.isSuccess) {
       this.allAccounts = resp.result;
       this.accounts = resp.result;
+      this.favorites = resp.result.filter(x => x.isFavorite);
+    }
+  }
+
+  private async updateAccount(account: Account) {
+    if (account) {
+      let req = new UpdateAccount();
+      req.id = account.id;
+      req.name = account.name;
+      req.category = account.category;
+      req.username = account.username;
+      req.pattern = account.pattern;
+      req.length = account.length;
+      req.includeSpecialCharacter = account.includeSpecialCharacter;
+      req.useCustomSpecialCharacter = account.useCustomSpecialCharacter;
+      req.customSpecialCharacter = account.customSpecialCharacter;
+      req.notes = account.notes;
+      req.isFavorite = account.isFavorite;
+
+      let resp = await this.loadingService.add(this.accountService.update(req));
+      if (resp.isSuccess) {
+        this.alertService.showError(`Account ${req.name} is updated successfully`);
+      }
     }
   }
 }

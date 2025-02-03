@@ -11,4 +11,5 @@ export class Account {
   @autoserialize useCustomSpecialCharacter: boolean;
   @autoserialize customSpecialCharacter: string;
   @autoserialize notes: string;
+  @autoserialize isFavorite: boolean;
 }

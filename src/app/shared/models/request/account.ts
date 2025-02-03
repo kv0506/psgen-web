@@ -8,6 +8,7 @@ export class CreateAccount {
   useCustomSpecialCharacter: boolean;
   customSpecialCharacter: string;
   notes: string;
+  isFavorite: boolean;
 }
 
 export class UpdateAccount {
@@ -21,6 +22,7 @@ export class UpdateAccount {
   useCustomSpecialCharacter: boolean;
   customSpecialCharacter: string;
   notes: string;
+  isFavorite: boolean;
 }
 
 export class DeleteAccount {
