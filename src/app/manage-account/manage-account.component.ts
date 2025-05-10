@@ -75,6 +75,7 @@ export class ManageAccountComponent implements OnInit {
       req.useCustomSpecialCharacter = this.data.account.useCustomSpecialCharacter;
       req.customSpecialCharacter = this.data.account.customSpecialCharacter;
       req.notes = this.formGroup.value.notes;
+      req.isFavorite = this.data.account.isFavorite;
 
       let resp = await this.loadingService.add(this.accountService.update(req));
       if (resp.isSuccess) {
