@@ -1,21 +1,27 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormGroupDirective, Validators} from "@angular/forms";
+import { FormBuilder, FormGroup, FormGroupDirective, Validators, ReactiveFormsModule } from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Clipboard} from '@angular/cdk/clipboard';
-import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import { MatSlideToggleChange, MatSlideToggle } from "@angular/material/slide-toggle";
 import {AuthService} from "../shared/services/auth.service";
 import {AccountService} from "../shared/services/account.service";
-import {IsLoadingService} from "@service-work/is-loading";
+import {IsLoadingService} from "../shared/services/is-loading.service";
 import {Account} from "../shared/models/dto/account";
 import {PasswordHashService} from "../shared/services/password-hash.service";
 import {ActivatedRoute} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {ManageAccountComponent} from "../manage-account/manage-account.component";
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatFormField, MatLabel, MatInput, MatSuffix, MatError, MatHint } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-generate-password',
-  templateUrl: './generate-password.component.html',
-  styleUrls: ['./generate-password.component.sass']
+    selector: 'app-generate-password',
+    templateUrl: './generate-password.component.html',
+    styleUrls: ['./generate-password.component.sass'],
+    imports: [ReactiveFormsModule, MatCard, MatCardContent, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, NgIf, MatError, MatHint, MatSlideToggle, MatButton]
 })
 export class GeneratePasswordComponent implements OnInit {
   public formGroup: FormGroup;
@@ -152,7 +158,7 @@ export class GeneratePasswordComponent implements OnInit {
       const dialogRef = this.dialog.open(ManageAccountComponent, {
         data: {account: account},
       });
-      dialogRef.afterClosed().subscribe((result) => {
+      dialogRef.afterClosed().subscribe((result: unknown) => {
         if (result) {
         }
       });

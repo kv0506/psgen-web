@@ -1,13 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {Account} from "../shared/models/dto/account";
-import {IsLoadingService} from "@service-work/is-loading";
+import {IsLoadingService} from "../shared/services/is-loading.service";
 import {AccountService} from "../shared/services/account.service";
 import {Router} from "@angular/router";
 import {DeleteAccount, UpdateAccount} from "../shared/models/request/account";
-import {FormControl} from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {AccountPasswordComponent} from "../account-password/account-password.component";
 import {AlertService} from "../shared/services/alert.service";
+import { NgIf, NgFor } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 type AccountGroup = {
   name: string,
@@ -15,9 +18,10 @@ type AccountGroup = {
 };
 
 @Component({
-  selector: 'app-accounts',
-  templateUrl: './accounts.component.html',
-  styleUrls: ['./accounts.component.sass']
+    selector: 'app-accounts',
+    templateUrl: './accounts.component.html',
+    styleUrls: ['./accounts.component.sass'],
+    imports: [ReactiveFormsModule, NgIf, NgFor, MatIconButton, MatIcon]
 })
 export class AccountsComponent implements OnInit {
   accounts: Array<Account> = [];
@@ -64,7 +68,7 @@ export class AccountsComponent implements OnInit {
       data: {account: account},
       minWidth: '350px',
     });
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result: unknown) => {
       if (result) {
       }
     });

@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../shared/services/auth.service";
-import {Router} from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.sass']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.sass'],
+    imports: [RouterLink, NgIf]
 })
 export class HeaderComponent implements OnInit {
   loggedIn: boolean;

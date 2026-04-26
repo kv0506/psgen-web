@@ -1,15 +1,21 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from "@angular/material/dialog";
 import {Account} from "../shared/models/dto/account";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {PasswordHashService} from "../shared/services/password-hash.service";
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatInput, MatSuffix, MatHint, MatError } from '@angular/material/input';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-account-password',
-  templateUrl: './account-password.component.html',
-  styleUrls: ['./account-password.component.sass']
+    selector: 'app-account-password',
+    templateUrl: './account-password.component.html',
+    styleUrls: ['./account-password.component.sass'],
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, MatHint, NgIf, MatError, MatDialogActions, MatButton, MatDialogClose]
 })
 export class AccountPasswordComponent implements OnInit{
   public formGroup: FormGroup;

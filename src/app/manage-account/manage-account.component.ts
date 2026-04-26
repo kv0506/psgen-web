@@ -1,16 +1,21 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {IsLoadingService} from "@service-work/is-loading";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from "@angular/material/dialog";
+import {IsLoadingService} from "../shared/services/is-loading.service";
 import {Account} from "../shared/models/dto/account";
 import {CreateAccount, UpdateAccount} from "../shared/models/request/account";
 import {AccountService} from "../shared/services/account.service";
 import {AlertService} from "../shared/services/alert.service";
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatInput, MatHint } from '@angular/material/input';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-manage-account',
-  templateUrl: './manage-account.component.html',
-  styleUrls: ['./manage-account.component.sass']
+    selector: 'app-manage-account',
+    templateUrl: './manage-account.component.html',
+    styleUrls: ['./manage-account.component.sass'],
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatHint, MatSlideToggle, MatDialogActions, MatButton, MatDialogClose]
 })
 export class ManageAccountComponent implements OnInit {
   public formGroup: FormGroup;
