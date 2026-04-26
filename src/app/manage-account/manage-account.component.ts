@@ -31,7 +31,8 @@ export class ManageAccountComponent implements OnInit {
       accountName: [this.data.account.name ?? '', Validators.required],
       accountCategory: [this.data.account.category ?? ''],
       username: [this.data.account.username ?? ''],
-      notes: [this.data.account.notes ?? '']
+      notes: [this.data.account.notes ?? ''],
+      isFavorite: [this.data.account.isFavorite ?? false]
     });
   }
 
@@ -44,7 +45,8 @@ export class ManageAccountComponent implements OnInit {
   }
 
   private async createAccount() {
-    let req = new CreateAccount();
+    if(this.formGroup) {
+      let req = new CreateAccount();
     req.name = this.formGroup.value.accountName;
     req.category = this.formGroup.value.accountCategory;
     req.username = this.formGroup.value.username;
@@ -54,16 +56,18 @@ export class ManageAccountComponent implements OnInit {
     req.useCustomSpecialCharacter = this.data.account.useCustomSpecialCharacter;
     req.customSpecialCharacter = this.data.account.customSpecialCharacter;
     req.notes = this.formGroup.value.notes;
+    req.isFavorite = this.formGroup.value.isFavorite;
 
     let resp = await this.loadingService.add(this.accountService.create(req));
     if (resp.isSuccess) {
-      this.alertService.showError(`Account ${req.name} is saved successfully`);
+      this.alertService.showAlert(`Account ${req.name} is saved successfully`);
       this.dialogRef.close(true);
+    }
     }
   }
 
   private async updateAccount() {
-    if (this.data.account) {
+    if (this.data.account && this.formGroup) {
       let req = new UpdateAccount();
       req.id = this.data.account.id;
       req.name = this.formGroup.value.accountName;
@@ -75,11 +79,11 @@ export class ManageAccountComponent implements OnInit {
       req.useCustomSpecialCharacter = this.data.account.useCustomSpecialCharacter;
       req.customSpecialCharacter = this.data.account.customSpecialCharacter;
       req.notes = this.formGroup.value.notes;
-      req.isFavorite = this.data.account.isFavorite;
+      req.isFavorite = this.formGroup.value.isFavorite;
 
       let resp = await this.loadingService.add(this.accountService.update(req));
       if (resp.isSuccess) {
-        this.alertService.showError(`Account ${req.name} is updated successfully`);
+        this.alertService.showAlert(`Account ${req.name} is updated successfully`);
         this.dialogRef.close(true);
       }
     }

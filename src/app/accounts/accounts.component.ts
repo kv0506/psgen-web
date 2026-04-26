@@ -9,17 +9,23 @@ import {MatDialog} from "@angular/material/dialog";
 import {AccountPasswordComponent} from "../account-password/account-password.component";
 import {AlertService} from "../shared/services/alert.service";
 
+type AccountGroup = {
+  name: string,
+  accounts: Array<Account>
+};
+
 @Component({
   selector: 'app-accounts',
   templateUrl: './accounts.component.html',
   styleUrls: ['./accounts.component.sass']
 })
 export class AccountsComponent implements OnInit {
-  accounts: Array<Account>;
-  favorites: Array<Account>;
-  search: FormControl;
+  accounts: Array<Account> = [];
+  favorites: Array<Account> = [];
+  groupedAccounts: Array<AccountGroup> = [];
+  search!: FormControl;
 
-  private allAccounts: Array<Account>;
+  private allAccounts: Array<Account> = [];
 
   constructor(
     private router: Router,
@@ -36,6 +42,7 @@ export class AccountsComponent implements OnInit {
 
   public searchQueryChanged() {
     this.accounts = this.allAccounts.filter(x => x.name.toLowerCase().includes(this.search.value.toLowerCase()));
+    this.groupedAccounts = this.buildGroupedAccounts(this.accounts);
   }
 
   public editAccount(accountId: string) {
@@ -78,7 +85,39 @@ export class AccountsComponent implements OnInit {
       this.allAccounts = resp.result;
       this.accounts = resp.result;
       this.favorites = resp.result.filter(x => x.isFavorite);
+      this.groupedAccounts = this.buildGroupedAccounts(this.accounts);
     }
+  }
+
+  private buildGroupedAccounts(accounts: Array<Account>): Array<AccountGroup> {
+    const grouped = new Map<string, AccountGroup>();
+
+    for (const account of accounts) {
+      const groupKey = this.getGroupKey(account);
+
+      if (!grouped.has(groupKey)) {
+        grouped.set(groupKey, {
+          name: this.getDisplayGroupName(groupKey),
+          accounts: []
+        });
+      }
+
+      grouped.get(groupKey)?.accounts.push(account);
+    }
+
+    return Array.from(grouped.values())
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, {sensitivity: 'base'}));
+  }
+
+  private getGroupKey(account: Account): string {
+    const rawGroupName = (account as any).groupName ?? (account as any).group ?? account.category;
+    const groupName = rawGroupName?.toString().trim().toLowerCase();
+
+    return groupName || 'Ungrouped';
+  }
+
+  private getDisplayGroupName(groupKey: string): string {
+    return groupKey.charAt(0).toUpperCase() + groupKey.slice(1);
   }
 
   private async updateAccount(account: Account) {
@@ -98,7 +137,7 @@ export class AccountsComponent implements OnInit {
 
       let resp = await this.loadingService.add(this.accountService.update(req));
       if (resp.isSuccess) {
-        this.alertService.showError(`Account ${req.name} is updated successfully`);
+        this.alertService.showAlert(`Account ${req.name} is updated successfully`);
       }
     }
   }

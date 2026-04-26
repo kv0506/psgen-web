@@ -8,7 +8,7 @@ export class AlertService {
   constructor(private _snackBar: MatSnackBar) {
   }
 
-  public showError(message: string) {
+  public showAlert(message: string) {
     this._snackBar.open(message, 'Dismiss');
   }
 }

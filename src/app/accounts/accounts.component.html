@@ -41,35 +41,37 @@
   </div>
 </div>
 <div>
-  <div *ngIf="favorites.length > 0" class="row">
-    <div class="col">
-      <h3 class="text-white-50">All</h3>
+  <div *ngFor="let group of groupedAccounts" class="mb-4">
+    <div class="row mb-2">
+      <div class="col">
+        <h5 class="text-white-50">{{group.name}}</h5>
+      </div>
     </div>
-  </div>
-  <div class="row row-cols-1 row-cols-sm-auto g-4">
-    <div class="col" *ngFor="let account of accounts">
-      <div class="card card-bg">
-        <div class="card-body">
-          <div class="d-flex">
-            <div class="flex-grow-1"><h5 class="card-title">{{account.name}}</h5></div>
-            <div class="text-secondary ms-3">{{account.category}}</div>
-          </div>
-          <div *ngIf="account.username" class="text-body mb-2">{{account.username}}</div>
-          <div *ngIf="account.notes" class="text-body mb-2">{{account.notes}}</div>
-          <div class="d-flex">
-            <div class="flex-grow-1"></div>
-            <button mat-icon-button color="warn" type="button" (click)="deleteAccount(account.id)">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-icon-button color="secondary" type="button" (click)="favoriteAccount(account.id)">
-              <mat-icon>{{ account.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
-            </button>
-            <button mat-icon-button color="secondary" type="button" (click)="editAccount(account.id)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button color="primary" type="button" (click)="generatePassword(account)">
-              <mat-icon>lock_open</mat-icon>
-            </button>
+    <div class="row row-cols-1 row-cols-sm-auto g-4">
+      <div class="col" *ngFor="let account of group.accounts">
+        <div class="card card-bg">
+          <div class="card-body">
+            <div class="d-flex">
+              <div class="flex-grow-1"><h5 class="card-title">{{account.name}}</h5></div>
+              <div class="text-secondary ms-3">{{account.category}}</div>
+            </div>
+            <div *ngIf="account.username" class="text-body mb-2">{{account.username}}</div>
+            <div *ngIf="account.notes" class="text-body mb-2">{{account.notes}}</div>
+            <div class="d-flex">
+              <div class="flex-grow-1"></div>
+              <button mat-icon-button color="warn" type="button" (click)="deleteAccount(account.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button color="secondary" type="button" (click)="favoriteAccount(account.id)">
+                <mat-icon>{{ account.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+              </button>
+              <button mat-icon-button color="secondary" type="button" (click)="editAccount(account.id)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="primary" type="button" (click)="generatePassword(account)">
+                <mat-icon>lock_open</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
       </div>

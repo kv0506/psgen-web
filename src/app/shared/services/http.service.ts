@@ -94,11 +94,11 @@ export class HttpService {
 
     if (httpResponse.ok) {
       if (!apiResponse.isSuccess) {
-        this.alertService.showError(apiResponse.getErrors());
+        this.alertService.showAlert(apiResponse.getErrors());
       }
       return apiResponse;
     } else {
-      this.alertService.showError(JSON.stringify(httpResponse.body));
+      this.alertService.showAlert(JSON.stringify(httpResponse.body));
     }
 
     return this.getDefaultApiResponse(apiResponse);
