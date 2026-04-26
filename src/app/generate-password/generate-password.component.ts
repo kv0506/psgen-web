@@ -146,6 +146,7 @@ export class GeneratePasswordComponent implements OnInit {
         account.category = this.account.category;
         account.username = this.account.username;
         account.notes = this.account.notes;
+        account.isFavorite = this.account.isFavorite;
       }
 
       const dialogRef = this.dialog.open(ManageAccountComponent, {
