@@ -1,16 +1,23 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {IsLoadingService} from "@service-work/is-loading";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from "@angular/material/dialog";
+import {IsLoadingService} from "../shared/services/is-loading.service";
 import {Account} from "../shared/models/dto/account";
 import {CreateAccount, UpdateAccount} from "../shared/models/request/account";
 import {AccountService} from "../shared/services/account.service";
 import {AlertService} from "../shared/services/alert.service";
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { A11yModule } from '@angular/cdk/a11y';
+import { MatFormField, MatLabel, MatInput, MatHint } from '@angular/material/input';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-manage-account',
-  templateUrl: './manage-account.component.html',
-  styleUrls: ['./manage-account.component.sass']
+    selector: 'app-manage-account',
+    templateUrl: './manage-account.component.html',
+    styleUrls: ['./manage-account.component.sass'],
+  standalone: true,
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatHint, MatSlideToggle, MatDialogActions, MatButton, MatDialogClose, A11yModule]
 })
 export class ManageAccountComponent implements OnInit {
   public formGroup: FormGroup;
@@ -31,7 +38,8 @@ export class ManageAccountComponent implements OnInit {
       accountName: [this.data.account.name ?? '', Validators.required],
       accountCategory: [this.data.account.category ?? ''],
       username: [this.data.account.username ?? ''],
-      notes: [this.data.account.notes ?? '']
+      notes: [this.data.account.notes ?? ''],
+      isFavorite: [this.data.account.isFavorite ?? false]
     });
   }
 
@@ -44,7 +52,8 @@ export class ManageAccountComponent implements OnInit {
   }
 
   private async createAccount() {
-    let req = new CreateAccount();
+    if(this.formGroup) {
+      let req = new CreateAccount();
     req.name = this.formGroup.value.accountName;
     req.category = this.formGroup.value.accountCategory;
     req.username = this.formGroup.value.username;
@@ -54,16 +63,18 @@ export class ManageAccountComponent implements OnInit {
     req.useCustomSpecialCharacter = this.data.account.useCustomSpecialCharacter;
     req.customSpecialCharacter = this.data.account.customSpecialCharacter;
     req.notes = this.formGroup.value.notes;
+    req.isFavorite = this.formGroup.value.isFavorite;
 
     let resp = await this.loadingService.add(this.accountService.create(req));
     if (resp.isSuccess) {
-      this.alertService.showError(`Account ${req.name} is saved successfully`);
+      this.alertService.showAlert(`Account ${req.name} is saved successfully`);
       this.dialogRef.close(true);
+    }
     }
   }
 
   private async updateAccount() {
-    if (this.data.account) {
+    if (this.data.account && this.formGroup) {
       let req = new UpdateAccount();
       req.id = this.data.account.id;
       req.name = this.formGroup.value.accountName;
@@ -75,11 +86,11 @@ export class ManageAccountComponent implements OnInit {
       req.useCustomSpecialCharacter = this.data.account.useCustomSpecialCharacter;
       req.customSpecialCharacter = this.data.account.customSpecialCharacter;
       req.notes = this.formGroup.value.notes;
-      req.isFavorite = this.data.account.isFavorite;
+      req.isFavorite = this.formGroup.value.isFavorite;
 
       let resp = await this.loadingService.add(this.accountService.update(req));
       if (resp.isSuccess) {
-        this.alertService.showError(`Account ${req.name} is updated successfully`);
+        this.alertService.showAlert(`Account ${req.name} is updated successfully`);
         this.dialogRef.close(true);
       }
     }

@@ -1,25 +1,36 @@
 import {Component, OnInit} from '@angular/core';
 import {Account} from "../shared/models/dto/account";
-import {IsLoadingService} from "@service-work/is-loading";
+import {IsLoadingService} from "../shared/services/is-loading.service";
 import {AccountService} from "../shared/services/account.service";
 import {Router} from "@angular/router";
 import {DeleteAccount, UpdateAccount} from "../shared/models/request/account";
-import {FormControl} from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {AccountPasswordComponent} from "../account-password/account-password.component";
 import {AlertService} from "../shared/services/alert.service";
+import { NgIf, NgFor } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+
+type AccountGroup = {
+  name: string,
+  accounts: Array<Account>
+};
 
 @Component({
-  selector: 'app-accounts',
-  templateUrl: './accounts.component.html',
-  styleUrls: ['./accounts.component.sass']
+    selector: 'app-accounts',
+    templateUrl: './accounts.component.html',
+    styleUrls: ['./accounts.component.sass'],
+  standalone: true,
+    imports: [ReactiveFormsModule, NgIf, NgFor, MatIconButton, MatIcon]
 })
 export class AccountsComponent implements OnInit {
-  accounts: Array<Account>;
-  favorites: Array<Account>;
-  search: FormControl;
+  accounts: Array<Account> = [];
+  favorites: Array<Account> = [];
+  groupedAccounts: Array<AccountGroup> = [];
+  search!: FormControl;
 
-  private allAccounts: Array<Account>;
+  private allAccounts: Array<Account> = [];
 
   constructor(
     private router: Router,
@@ -36,6 +47,7 @@ export class AccountsComponent implements OnInit {
 
   public searchQueryChanged() {
     this.accounts = this.allAccounts.filter(x => x.name.toLowerCase().includes(this.search.value.toLowerCase()));
+    this.groupedAccounts = this.buildGroupedAccounts(this.accounts);
   }
 
   public editAccount(accountId: string) {
@@ -57,7 +69,7 @@ export class AccountsComponent implements OnInit {
       data: {account: account},
       minWidth: '350px',
     });
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe((result: unknown) => {
       if (result) {
       }
     });
@@ -78,7 +90,38 @@ export class AccountsComponent implements OnInit {
       this.allAccounts = resp.result;
       this.accounts = resp.result;
       this.favorites = resp.result.filter(x => x.isFavorite);
+      this.groupedAccounts = this.buildGroupedAccounts(this.accounts);
     }
+  }
+
+  private buildGroupedAccounts(accounts: Array<Account>): Array<AccountGroup> {
+    const grouped = new Map<string, AccountGroup>();
+
+    for (const account of accounts) {
+      const groupKey = this.getGroupKey(account);
+
+      if (!grouped.has(groupKey)) {
+        grouped.set(groupKey, {
+          name: this.getDisplayGroupName(groupKey),
+          accounts: []
+        });
+      }
+
+      grouped.get(groupKey)?.accounts.push(account);
+    }
+
+    return Array.from(grouped.values())
+      .sort((a, b) => a.name.localeCompare(b.name, undefined, {sensitivity: 'base'}));
+  }
+
+  private getGroupKey(account: Account): string {
+    const groupName = account.category?.toString().trim().toLowerCase();
+
+    return groupName || 'ungrouped';
+  }
+
+  private getDisplayGroupName(groupKey: string): string {
+    return groupKey.charAt(0).toUpperCase() + groupKey.slice(1);
   }
 
   private async updateAccount(account: Account) {
@@ -98,7 +141,7 @@ export class AccountsComponent implements OnInit {
 
       let resp = await this.loadingService.add(this.accountService.update(req));
       if (resp.isSuccess) {
-        this.alertService.showError(`Account ${req.name} is updated successfully`);
+        this.alertService.showAlert(`Account ${req.name} is updated successfully`);
       }
     }
   }

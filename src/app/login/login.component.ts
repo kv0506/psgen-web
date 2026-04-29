@@ -1,15 +1,22 @@
 import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
 import {Router} from "@angular/router";
 import {LocalStorageService} from "ngx-webstorage";
-import {IsLoadingService} from "@service-work/is-loading";
+import {IsLoadingService} from "../shared/services/is-loading.service";
 import {AuthService} from "../shared/services/auth.service";
 import {LoginRequest} from "../shared/models/request/login";
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent } from '@angular/material/card';
+import { MatDivider } from '@angular/material/divider';
+import { MatFormField, MatLabel, MatInput, MatError } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.sass']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.sass'],
+  standalone: true,
+    imports: [ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatDivider, MatFormField, MatLabel, MatInput, NgIf, MatError, MatButton]
 })
 export class LoginComponent {
   public formGroup: FormGroup;
