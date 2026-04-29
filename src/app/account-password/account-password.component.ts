@@ -6,6 +6,7 @@ import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {PasswordHashService} from "../shared/services/password-hash.service";
 import { CdkScrollable } from '@angular/cdk/scrolling';
+import { A11yModule } from '@angular/cdk/a11y';
 import { MatFormField, MatLabel, MatInput, MatSuffix, MatHint, MatError } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
@@ -15,7 +16,8 @@ import { MatButton } from '@angular/material/button';
     selector: 'app-account-password',
     templateUrl: './account-password.component.html',
     styleUrls: ['./account-password.component.sass'],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, MatHint, NgIf, MatError, MatDialogActions, MatButton, MatDialogClose]
+  standalone: true,
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, MatHint, NgIf, MatError, MatDialogActions, MatButton, MatDialogClose, A11yModule]
 })
 export class AccountPasswordComponent implements OnInit{
   public formGroup: FormGroup;

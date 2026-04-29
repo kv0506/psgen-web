@@ -7,6 +7,7 @@ import {CreateAccount, UpdateAccount} from "../shared/models/request/account";
 import {AccountService} from "../shared/services/account.service";
 import {AlertService} from "../shared/services/alert.service";
 import { CdkScrollable } from '@angular/cdk/scrolling';
+import { A11yModule } from '@angular/cdk/a11y';
 import { MatFormField, MatLabel, MatInput, MatHint } from '@angular/material/input';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatButton } from '@angular/material/button';
@@ -15,7 +16,8 @@ import { MatButton } from '@angular/material/button';
     selector: 'app-manage-account',
     templateUrl: './manage-account.component.html',
     styleUrls: ['./manage-account.component.sass'],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatHint, MatSlideToggle, MatDialogActions, MatButton, MatDialogClose]
+  standalone: true,
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatHint, MatSlideToggle, MatDialogActions, MatButton, MatDialogClose, A11yModule]
 })
 export class ManageAccountComponent implements OnInit {
   public formGroup: FormGroup;

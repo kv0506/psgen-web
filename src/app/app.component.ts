@@ -9,6 +9,7 @@ import { SwIsLoadingPipe } from './shared/pipes/sw-is-loading.pipe';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.sass'],
+    standalone: true,
     imports: [HeaderComponent, NgIf, MatProgressBar, RouterOutlet, AsyncPipe, SwIsLoadingPipe]
 })
 export class AppComponent {

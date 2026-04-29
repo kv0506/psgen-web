@@ -94,7 +94,7 @@ export class HttpService {
 
     if (httpResponse.ok) {
       if (!apiResponse.isSuccess) {
-        this.alertService.showAlert(apiResponse.getErrors());
+        this.alertService.showAlert(apiResponse.message ?? 'An error occurred in the server. Please try again.');
       }
       return apiResponse;
     } else {
@@ -105,8 +105,8 @@ export class HttpService {
   }
 
   private getDefaultApiResponse(apiResponse: any): any {
-    apiResponse.IsSuccess = false;
-    apiResponse.Messages = 'An error occurred in the server. Please try again.';
+    apiResponse.isSuccess = false;
+    apiResponse.message = 'An error occurred in the server. Please try again.';
     return apiResponse;
   }
 }

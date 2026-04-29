@@ -21,6 +21,7 @@ type AccountGroup = {
     selector: 'app-accounts',
     templateUrl: './accounts.component.html',
     styleUrls: ['./accounts.component.sass'],
+  standalone: true,
     imports: [ReactiveFormsModule, NgIf, NgFor, MatIconButton, MatIcon]
 })
 export class AccountsComponent implements OnInit {
@@ -114,10 +115,9 @@ export class AccountsComponent implements OnInit {
   }
 
   private getGroupKey(account: Account): string {
-    const rawGroupName = (account as any).groupName ?? (account as any).group ?? account.category;
-    const groupName = rawGroupName?.toString().trim().toLowerCase();
+    const groupName = account.category?.toString().trim().toLowerCase();
 
-    return groupName || 'Ungrouped';
+    return groupName || 'ungrouped';
   }
 
   private getDisplayGroupName(groupKey: string): string {

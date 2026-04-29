@@ -21,6 +21,7 @@ import { MatButton } from '@angular/material/button';
     selector: 'app-generate-password',
     templateUrl: './generate-password.component.html',
     styleUrls: ['./generate-password.component.sass'],
+  standalone: true,
     imports: [ReactiveFormsModule, MatCard, MatCardContent, MatFormField, MatLabel, MatInput, MatIcon, MatSuffix, NgIf, MatError, MatHint, MatSlideToggle, MatButton]
 })
 export class GeneratePasswordComponent implements OnInit {

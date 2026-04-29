@@ -7,6 +7,7 @@ import { NgIf } from '@angular/common';
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.sass'],
+  standalone: true,
     imports: [RouterLink, NgIf]
 })
 export class HeaderComponent implements OnInit {
